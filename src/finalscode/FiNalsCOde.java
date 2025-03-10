@@ -4,7 +4,7 @@
  */
 package finalscode;
 
-import GuiFrames.LoginForm;
+import GUI.Frames.LoginForm;
 
 /**
  *
