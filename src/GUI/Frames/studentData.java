@@ -20,6 +20,7 @@ public class studentData extends javax.swing.JPanel {
 
     public studentData(ArrayList<studyante> student, statistics statsPanel) {
         initComponents();
+         this.stu = new ArrayList<>();
         this.statsPanel = statsPanel;
 
         if (model == null) {
@@ -66,7 +67,7 @@ public class studentData extends javax.swing.JPanel {
         btnUpdate = new GUI.CustomComponents.MyButton();
         txtSearch = new GUI.CustomComponents.MyTextField();
 
-        jPanel1.setBackground(new java.awt.Color(204, 0, 0));
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
 
         stuTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -87,8 +88,8 @@ public class studentData extends javax.swing.JPanel {
         stuTable.setFont(new java.awt.Font("Segoe Print", 0, 10)); // NOI18N
         jScrollPane2.setViewportView(stuTable);
 
-        jPanel4.setBackground(new java.awt.Color(204, 0, 0));
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 0, 0), 3, true), "Student Form", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Print", 1, 14), new java.awt.Color(102, 0, 0))); // NOI18N
+        jPanel4.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 3, true), "Student Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Print", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
 
         txtID2.setText("Enter student ID");
         txtID2.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -150,7 +151,7 @@ public class studentData extends javax.swing.JPanel {
             }
         });
 
-        cbStatus2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please select a Status", "ENRROLED", "UNENRROLED", "DROPPED" }));
+        cbStatus2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please select a Status", "ENROLLED", "UNENRROLED", "DROPPED" }));
 
         cbYear2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please select a Year", "1ST", "2ND", "3RD", "4TH" }));
         cbYear2.addActionListener(new java.awt.event.ActionListener() {
@@ -164,35 +165,35 @@ public class studentData extends javax.swing.JPanel {
         cbGender2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please select a Gender.", "Male", "Female" }));
 
         jLabel17.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
         jLabel17.setText("FIRSTNAME:");
 
         jLabel18.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jLabel18.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
         jLabel18.setText("MIDDLENAME:");
 
         jLabel19.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
         jLabel19.setText("LASTNAME:");
 
         jLabel20.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
         jLabel20.setText("STUDENT ID:");
 
         jLabel21.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jLabel21.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel21.setForeground(new java.awt.Color(255, 255, 255));
         jLabel21.setText("GENDER:");
 
         jLabel22.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jLabel22.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel22.setForeground(new java.awt.Color(255, 255, 255));
         jLabel22.setText("COURSE:");
 
         jLabel23.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jLabel23.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel23.setForeground(new java.awt.Color(255, 255, 255));
         jLabel23.setText("YEAR:");
 
         jLabel24.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jLabel24.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel24.setForeground(new java.awt.Color(255, 255, 255));
         jLabel24.setText("STATUS:");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -264,13 +265,13 @@ public class studentData extends javax.swing.JPanel {
                         .addGap(40, 40, 40))))
         );
 
-        btnAdd.setBackground(new java.awt.Color(255, 0, 0));
+        btnAdd.setBackground(new java.awt.Color(255, 255, 255));
         btnAdd.setForeground(new java.awt.Color(0, 0, 0));
         btnAdd.setText("ADD");
-        btnAdd.setBorderColor(new java.awt.Color(255, 0, 0));
-        btnAdd.setColor(new java.awt.Color(255, 0, 0));
-        btnAdd.setColorClick(new java.awt.Color(255, 153, 153));
-        btnAdd.setColorOver(new java.awt.Color(255, 102, 102));
+        btnAdd.setBorderColor(new java.awt.Color(255, 255, 255));
+        btnAdd.setColor(new java.awt.Color(255, 255, 255));
+        btnAdd.setColorClick(new java.awt.Color(204, 204, 204));
+        btnAdd.setColorOver(new java.awt.Color(153, 153, 153));
         btnAdd.setFont(new java.awt.Font("Segoe Print", 1, 18)); // NOI18N
         btnAdd.setRadius(40);
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -279,13 +280,13 @@ public class studentData extends javax.swing.JPanel {
             }
         });
 
-        btnDelete.setBackground(new java.awt.Color(255, 0, 0));
+        btnDelete.setBackground(new java.awt.Color(255, 255, 255));
         btnDelete.setForeground(new java.awt.Color(0, 0, 0));
         btnDelete.setText("DELETE");
-        btnDelete.setBorderColor(new java.awt.Color(255, 0, 0));
-        btnDelete.setColor(new java.awt.Color(255, 0, 0));
-        btnDelete.setColorClick(new java.awt.Color(255, 153, 153));
-        btnDelete.setColorOver(new java.awt.Color(255, 102, 102));
+        btnDelete.setBorderColor(new java.awt.Color(255, 255, 255));
+        btnDelete.setColor(new java.awt.Color(255, 255, 255));
+        btnDelete.setColorClick(new java.awt.Color(204, 204, 204));
+        btnDelete.setColorOver(new java.awt.Color(153, 153, 153));
         btnDelete.setFont(new java.awt.Font("Segoe Print", 1, 18)); // NOI18N
         btnDelete.setRadius(40);
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -294,13 +295,13 @@ public class studentData extends javax.swing.JPanel {
             }
         });
 
-        btnUpdate.setBackground(new java.awt.Color(255, 0, 0));
+        btnUpdate.setBackground(new java.awt.Color(255, 255, 255));
         btnUpdate.setForeground(new java.awt.Color(0, 0, 0));
         btnUpdate.setText("UPDATE");
-        btnUpdate.setBorderColor(new java.awt.Color(255, 0, 0));
-        btnUpdate.setColor(new java.awt.Color(255, 0, 0));
-        btnUpdate.setColorClick(new java.awt.Color(255, 153, 153));
-        btnUpdate.setColorOver(new java.awt.Color(255, 102, 102));
+        btnUpdate.setBorderColor(new java.awt.Color(255, 255, 255));
+        btnUpdate.setColor(new java.awt.Color(255, 255, 255));
+        btnUpdate.setColorClick(new java.awt.Color(204, 204, 204));
+        btnUpdate.setColorOver(new java.awt.Color(153, 153, 153));
         btnUpdate.setFont(new java.awt.Font("Segoe Print", 1, 18)); // NOI18N
         btnUpdate.setRadius(40);
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
@@ -347,8 +348,8 @@ public class studentData extends javax.swing.JPanel {
                                     .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(34, 34, 34))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                                .addGap(12, 12, 12)
+                                .addComponent(txtSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(15, 15, 15))))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -356,20 +357,20 @@ public class studentData extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
+                        .addGap(36, 36, 36)
                         .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(57, 57, 57)
                         .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -380,7 +381,9 @@ public class studentData extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -522,6 +525,11 @@ public class studentData extends javax.swing.JPanel {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Invalid Student ID format!", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
+        
+          
+        if (statsPanel != null) {  // UPDATED
+            statsPanel.refreshData(stu);
+        }
 
     }//GEN-LAST:event_btnAddActionPerformed
 
@@ -636,6 +644,12 @@ public class studentData extends javax.swing.JPanel {
         stuTable.revalidate();
 
         JOptionPane.showMessageDialog(this, "Student updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        
+          
+        if (statsPanel != null) {  // UPDATED
+            statsPanel.refreshData(stu);
+        }
+        
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -651,6 +665,12 @@ public class studentData extends javax.swing.JPanel {
             saveStudentData();
             clearTable();
             JOptionPane.showMessageDialog(this, "Student deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            
+        }
+        
+          
+        if (statsPanel != null) {  // UPDATED
+            statsPanel.refreshData(stu);
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
