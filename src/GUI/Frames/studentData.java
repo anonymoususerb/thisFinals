@@ -135,6 +135,11 @@ public class studentData extends javax.swing.JPanel {
                 txtMiddleName2MouseClicked(evt);
             }
         });
+        txtMiddleName2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMiddleName2ActionPerformed(evt);
+            }
+        });
 
         txtLastName2.setText("Enter student Lastname");
         txtLastName2.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -152,6 +157,11 @@ public class studentData extends javax.swing.JPanel {
         });
 
         cbStatus2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please select a Status", "ENROLLED", "UNENRROLED", "DROPPED" }));
+        cbStatus2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbStatus2ActionPerformed(evt);
+            }
+        });
 
         cbYear2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please select a Year", "1ST", "2ND", "3RD", "4TH" }));
         cbYear2.addActionListener(new java.awt.event.ActionListener() {
@@ -382,8 +392,8 @@ public class studentData extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -700,6 +710,14 @@ public class studentData extends javax.swing.JPanel {
             txtSearch.setText("Search student id, name, gender, course, year, and status");
         }
     }//GEN-LAST:event_txtSearchFocusLost
+
+    private void cbStatus2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbStatus2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbStatus2ActionPerformed
+
+    private void txtMiddleName2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMiddleName2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMiddleName2ActionPerformed
 
     private void clearTable() {
         if (model == null) {

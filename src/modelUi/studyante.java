@@ -14,6 +14,14 @@ public class studyante implements Serializable {
     private String course;
     private String yearLvl;
     private String status;
+    
+    private String subject;
+
+    public studyante(String subject) {
+        this.subject = subject;
+    }
+    
+    
 
     // ✅ Constructor
     public studyante(int stuID, String firstName, String middleInitial, String lastName,

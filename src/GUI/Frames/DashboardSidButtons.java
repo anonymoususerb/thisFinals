@@ -7,7 +7,9 @@ package GUI.Frames;
 import modelUi.studyante;
 import java.awt.Color;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,14 +19,16 @@ public class DashboardSidButtons extends javax.swing.JFrame {
 
     private ArrayList<studyante> stu; // Store student list
     private statistics statsPanel; // Store statistics panel
-     private home homePanel; 
-    
+    private home homePanel;
+
     public DashboardSidButtons(ArrayList<studyante> students) {
         this.stu = students;
         this.statsPanel = new statistics(stu); // Create statistics panel once
         this.homePanel = new home(); // Create home panel once
         initComponents();
-        this.setLocationRelativeTo(null);
+
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen
+        this.setLocationRelativeTo(null); // orignal size
 
         // ✅ Show Home panel on startup
         ViewPanel.setViewportView(homePanel);
@@ -44,11 +48,6 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         lbl.setFont(new java.awt.Font("Segoe Print", 1, 26));
     }
 
-    public void LblHoverOut(JLabel lbl) {
-        lbl.setForeground(Color.WHITE);
-        lbl.setFont(new java.awt.Font("Segoe Print", 0, 24));
-    }
-
     public void LblHoverOutwo(JLabel lbl) {
         lbl.setForeground(Color.WHITE);
         lbl.setFont(new java.awt.Font("Segoe Print", 0, 23));
@@ -66,14 +65,21 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lblStatistics = new javax.swing.JLabel();
         lblStuData = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JLabel();
         lblHome = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        lblSubjects = new javax.swing.JLabel();
         ViewPanel = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -109,10 +115,21 @@ public class DashboardSidButtons extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Segoe Print", 1, 24)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("LOG OUT");
+        btnLogout.setFont(new java.awt.Font("Segoe Print", 1, 24)); // NOI18N
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btnLogout.setText("LOG OUT");
+        btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLogoutMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnLogoutMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnLogoutMouseExited(evt);
+            }
+        });
 
         lblHome.setFont(new java.awt.Font("Segoe Print", 1, 24)); // NOI18N
         lblHome.setForeground(new java.awt.Color(255, 255, 255));
@@ -132,20 +149,41 @@ public class DashboardSidButtons extends javax.swing.JFrame {
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Dark Blue and Gold  Circle Logo_300x300.png"))); // NOI18N
 
+        lblSubjects.setFont(new java.awt.Font("Segoe Print", 1, 24)); // NOI18N
+        lblSubjects.setForeground(new java.awt.Color(255, 255, 255));
+        lblSubjects.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSubjects.setText("SUBJECTS");
+        lblSubjects.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblSubjectsMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblSubjectsMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblSubjectsMouseExited(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblStuData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(lblSubjects, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(lblStuData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -153,22 +191,25 @@ public class DashboardSidButtons extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(91, 91, 91)
+                .addGap(97, 97, 97)
                 .addComponent(lblHome)
-                .addGap(18, 18, 18)
-                .addComponent(lblStuData, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 260, Short.MAX_VALUE)
-                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblStuData, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(lblSubjects)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+                .addComponent(btnLogout)
                 .addGap(51, 51, 51))
         );
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
 
         jLabel1.setFont(new java.awt.Font("Segoe Print", 1, 29)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Student Information System");
+        jLabel1.setText("Student Management System");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -223,7 +264,7 @@ public class DashboardSidButtons extends javax.swing.JFrame {
     }//GEN-LAST:event_lblStuDataMouseClicked
 
     private void lblStatisticsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblStatisticsMouseExited
-        LblHoverOut(lblStatistics);
+        LblHoverOutwo(lblStatistics);
     }//GEN-LAST:event_lblStatisticsMouseExited
 
     private void lblStatisticsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblStatisticsMouseEntered
@@ -245,8 +286,56 @@ public class DashboardSidButtons extends javax.swing.JFrame {
     }//GEN-LAST:event_lblHomeMouseEntered
 
     private void lblHomeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHomeMouseExited
-        LblHoverOut(lblHome);
+        LblHoverOutwo(lblHome);
     }//GEN-LAST:event_lblHomeMouseExited
+
+    private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
+        int result = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to exit?", "CONFIRMATION",
+                JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            this.dispose(); // Close current window
+//            LoginForm login = new LoginForm(new JFrame(), true, stu);
+//            login.setLocationRelativeTo(null); // Center login form
+//            login.setVisible(true);
+        }
+    }//GEN-LAST:event_btnLogoutMouseClicked
+
+    private void btnLogoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseEntered
+        LblHover(btnLogout);
+    }//GEN-LAST:event_btnLogoutMouseEntered
+
+    private void btnLogoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseExited
+        LblHoverOutwo(btnLogout);
+    }//GEN-LAST:event_btnLogoutMouseExited
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        int result = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to exit?", "CONFIRMATION",
+                JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            this.dispose(); // Close the current window
+            LoginForm login = new LoginForm(new JFrame(), true, stu);
+            login.setLocationRelativeTo(null); // Center login form
+            login.setVisible(true);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void lblSubjectsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSubjectsMouseClicked
+        ViewPanel.setViewportView(new subjects()); // Switch to subjects panel
+        ViewPanel.revalidate(); // Refresh UI
+        ViewPanel.repaint();
+    }//GEN-LAST:event_lblSubjectsMouseClicked
+
+    private void lblSubjectsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSubjectsMouseEntered
+        LblHover(lblSubjects);
+    }//GEN-LAST:event_lblSubjectsMouseEntered
+
+    private void lblSubjectsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSubjectsMouseExited
+        LblHoverOutwo(lblSubjects);
+    }//GEN-LAST:event_lblSubjectsMouseExited
 
     /**
      * @param args the command line arguments
@@ -261,13 +350,14 @@ public class DashboardSidButtons extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane ViewPanel;
+    private javax.swing.JLabel btnLogout;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblHome;
     private javax.swing.JLabel lblStatistics;
     private javax.swing.JLabel lblStuData;
+    private javax.swing.JLabel lblSubjects;
     // End of variables declaration//GEN-END:variables
 }

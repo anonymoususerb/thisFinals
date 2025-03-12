@@ -63,11 +63,12 @@ private List<studyante> students;
         updateBarGraph();
         updatePieChart();
     }
-
+    
+// total student, male, famale
     private void updateStudentCount() {
         int maleCount = 0;
         int femaleCount = 0;
-
+//calculates male, female
         for (studyante s : students) {
             if ("Male".equalsIgnoreCase(s.getGender())) {
                 maleCount++;
@@ -78,11 +79,11 @@ private List<studyante> students;
 
         if (stuMale != null) stuMale.setTotalStudents(maleCount);
         if (stuFemale != null) stuFemale.setTotalStudents(femaleCount);
-        if (stuOverall != null) stuOverall.setTotalStudents(students.size());
+        if (stuOverall != null) stuOverall.setTotalStudents(students.size());  // calculate the student total
 
         System.out.println("✅ Updated student counts - Male: " + maleCount + ", Female: " + femaleCount);
     }
-
+// bar graph
     private void updateBarGraph() {
         if (pnlBar == null) {
             System.out.println("❌ pnlBar is NULL! Cannot update bar graph.");
@@ -95,7 +96,7 @@ private List<studyante> students;
         }
 
         Map<String, Integer> courseCount = new HashMap<>();
-
+//  calculate the bargraph course
         for (studyante s : students) {
             if (!"Enter student Lastname".equals(s.getCourse())) {
                 courseCount.put(s.getCourse(), courseCount.getOrDefault(s.getCourse(), 0) + 1);
@@ -108,7 +109,7 @@ private List<studyante> students;
             pnlBar.setGraphData(courseCount);
         }
     }
-
+// pie chart
     private void updatePieChart() {
         if (stuPie == null) {
             System.out.println("❌ stuPie is NULL! Cannot update pie chart.");
@@ -116,7 +117,7 @@ private List<studyante> students;
         }
 
         int enrolled = 0, dropped = 0, unenrolled = 0;
-
+// calculates student pie chart
         for (studyante s : students) {
             if ("Enrolled".equalsIgnoreCase(s.getStatus())) {
                 enrolled++;
@@ -210,7 +211,12 @@ private List<studyante> students;
                 .addContainerGap())
         );
 
+        stuOverall.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 10, true));
         stuOverall.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+
+        stuMale.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 10, true));
+
+        stuFemale.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 10, true));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
