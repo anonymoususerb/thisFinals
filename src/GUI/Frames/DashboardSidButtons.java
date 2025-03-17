@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import modelUi.login;
 
 /**
  *
@@ -17,32 +18,41 @@ import javax.swing.JOptionPane;
  */
 public class DashboardSidButtons extends javax.swing.JFrame {
 
-    private ArrayList<studyante> stu; // Store student list
-    private statistics statsPanel; // Store statistics panel
+    private ArrayList<studyante> stu; 
+    private statistics statsPanel; 
     private home homePanel;
+    private String username;
+    ArrayList<login> users;
+    login name;
 
-    public DashboardSidButtons(ArrayList<studyante> students) {
+    public DashboardSidButtons(ArrayList<studyante> students,ArrayList<login> users,login name) {
         this.stu = students;
-        this.statsPanel = new statistics(stu); // Create statistics panel once
-        this.homePanel = new home(); // Create home panel once
+        this.username = username;
+        this.statsPanel = new statistics(stu); 
+        this.homePanel = new home(); 
+        this.users = users;
+        this.name = name;
         initComponents();
 
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen
-        this.setLocationRelativeTo(null); // orignal size
+        txtgreets.setText("Welcome " + name.getUsername() + "!");
+        
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setLocationRelativeTo(null); 
 
-        // ✅ Show Home panel on startup
+        
         ViewPanel.setViewportView(homePanel);
     }
 
-    // ✅ Method to switch to Statistics Panel
+   
+//    Call for stats panel
     private void switchToStatistics() {
-        statsPanel.refreshData(stu); // Update data before showing
-        ViewPanel.setViewportView(statsPanel); // Show existing panel
-        ViewPanel.revalidate(); // Refresh UI
+        statsPanel.refreshData(stu); 
+        ViewPanel.setViewportView(statsPanel);
+        ViewPanel.revalidate(); 
         ViewPanel.repaint();
     }
 
-    // ✅ Label Hover Effects
+//    Effects on LABEL
     public void LblHover(JLabel lbl) {
         lbl.setForeground(Color.WHITE);
         lbl.setFont(new java.awt.Font("Segoe Print", 1, 26));
@@ -52,6 +62,8 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         lbl.setForeground(Color.WHITE);
         lbl.setFont(new java.awt.Font("Segoe Print", 0, 23));
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -69,6 +81,7 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         lblHome = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblSubjects = new javax.swing.JLabel();
+        txtgreets = new javax.swing.JLabel();
         ViewPanel = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -165,6 +178,11 @@ public class DashboardSidButtons extends javax.swing.JFrame {
             }
         });
 
+        txtgreets.setFont(new java.awt.Font("Segoe Print", 1, 32)); // NOI18N
+        txtgreets.setForeground(new java.awt.Color(255, 255, 255));
+        txtgreets.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtgreets.setText(" Hello + username");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -177,29 +195,34 @@ public class DashboardSidButtons extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(lblSubjects, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addComponent(lblStuData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(lblStuData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(txtgreets, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addContainerGap()
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(97, 97, 97)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtgreets, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(96, 96, 96)
                 .addComponent(lblHome)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblStuData, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblSubjects)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(51, 51, 51))
         );
@@ -239,13 +262,10 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(ViewPanel)))
-                .addGap(0, 0, 0))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(ViewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -259,6 +279,7 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         LblHover(lblStuData);
     }//GEN-LAST:event_lblStuDataMouseEntered
 
+//    button for STATISTICS
     private void lblStuDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblStuDataMouseClicked
         ViewPanel.setViewportView(new studentData(stu, statsPanel));
     }//GEN-LAST:event_lblStuDataMouseClicked
@@ -275,6 +296,7 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         switchToStatistics();
     }//GEN-LAST:event_lblStatisticsMouseClicked
 
+//    button for HOMEPANEL
     private void lblHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHomeMouseClicked
         ViewPanel.setViewportView(homePanel);
         ViewPanel.revalidate();
@@ -289,16 +311,14 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         LblHoverOutwo(lblHome);
     }//GEN-LAST:event_lblHomeMouseExited
 
+//    LOG OUT LOOP
     private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
         int result = JOptionPane.showConfirmDialog(this,
                 "Are you sure you want to exit?", "CONFIRMATION",
                 JOptionPane.YES_NO_OPTION);
 
         if (result == JOptionPane.YES_OPTION) {
-            this.dispose(); // Close current window
-//            LoginForm login = new LoginForm(new JFrame(), true, stu);
-//            login.setLocationRelativeTo(null); // Center login form
-//            login.setVisible(true);
+            this.dispose(); 
         }
     }//GEN-LAST:event_btnLogoutMouseClicked
 
@@ -316,16 +336,17 @@ public class DashboardSidButtons extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION);
 
         if (result == JOptionPane.YES_OPTION) {
-            this.dispose(); // Close the current window
-            LoginForm login = new LoginForm(new JFrame(), true, stu);
-            login.setLocationRelativeTo(null); // Center login form
+            this.dispose(); 
+            LoginForm login = new LoginForm(new JFrame(), true, stu, users);
+            login.setLocationRelativeTo(null);
             login.setVisible(true);
         }
     }//GEN-LAST:event_formWindowClosing
 
+//    button for SUBJECTS
     private void lblSubjectsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSubjectsMouseClicked
-        ViewPanel.setViewportView(new subjects()); // Switch to subjects panel
-        ViewPanel.revalidate(); // Refresh UI
+        ViewPanel.setViewportView(new subjects(stu)); 
+        ViewPanel.revalidate();
         ViewPanel.repaint();
     }//GEN-LAST:event_lblSubjectsMouseClicked
 
@@ -343,7 +364,9 @@ public class DashboardSidButtons extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             ArrayList<studyante> students = new ArrayList<>();
-            new DashboardSidButtons(students).setVisible(true);
+            ArrayList<login> users = new ArrayList<>();
+            login names;
+            new DashboardSidButtons(students, users, names).setVisible(true);
         });
     }
 
@@ -359,5 +382,6 @@ public class DashboardSidButtons extends javax.swing.JFrame {
     private javax.swing.JLabel lblStatistics;
     private javax.swing.JLabel lblStuData;
     private javax.swing.JLabel lblSubjects;
+    private javax.swing.JLabel txtgreets;
     // End of variables declaration//GEN-END:variables
 }

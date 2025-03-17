@@ -4,6 +4,7 @@
  */
 package GUI.Frames;
 
+import modelUi.login;
 import modelUi.studyante;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
@@ -15,22 +16,29 @@ import java.util.ArrayList;
 public class LoginForm extends javax.swing.JDialog {
 
      ArrayList<studyante> stu = new ArrayList<>();
+     ArrayList<login> users = new ArrayList<>();
     /**
      * Creates new form LoginForm
      */
+//     start
     public LoginForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
         this.pack();
+        
+        users.add(new login("admin","admin"));
     }
-    
-    public LoginForm(java.awt.Frame parent, boolean modal, ArrayList<studyante> stu) {
+
+//    process
+    public LoginForm(java.awt.Frame parent, boolean modal, ArrayList<studyante> stu,ArrayList<login> users) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
         this.pack();  // Ensure it appears correctly
         this.stu = stu; 
+        this.users = users;
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -278,21 +286,28 @@ public class LoginForm extends javax.swing.JDialog {
         onLogin();
     }//GEN-LAST:event_btnLoginActionPerformed
     private void onLogin() {
-        if (username.getText().equals("Please enter your username") || new String(password.getPassword()).equals("password")) {
-            JOptionPane.showMessageDialog(this, "Please fill out all the fields", "Information", JOptionPane.INFORMATION_MESSAGE);
-            return;
-            
-        }
-        if (username.getText().equals("admin") && new String(password.getPassword()).equals("admin")) {
-            JOptionPane.showMessageDialog(this, "Welcome ADMIN!", "Access Granted", JOptionPane.INFORMATION_MESSAGE);
-       this.dispose();
-       
-       new DashboardSidButtons(stu).setVisible(true);
+        String userName = username.getText();
+        String passWord = password.getText();
         
-        }else{
-            JOptionPane.showMessageDialog(this,"Either username or password is incorrect", "Access Denied",JOptionPane.WARNING_MESSAGE);
+        if (username.getText().equals("Please enter your username") || password.getText().equals("password")){
+            JOptionPane.showMessageDialog(null, "Please Fill out this field","Error",JOptionPane.ERROR_MESSAGE);
+            return;
         }
-
+        
+        if (username.getText().isEmpty() ||password.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Please Fill out this field","Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        for(login s : users){
+            if(s.getUsername().equals(userName) || s.getPassword().equals(passWord)){
+                JOptionPane.showMessageDialog(null, "Log in succesfull","ACCESS GRANTED", JOptionPane.INFORMATION_MESSAGE);
+                
+                dispose();
+                
+                new DashboardSidButtons(stu,users,s).setVisible(true);
+            }
+        }
     }
 
     /**
