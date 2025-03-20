@@ -10,11 +10,16 @@ package modelUi;
  */
 public class login {
     
-    String Username,Password;
+    String Name,Username,Password;
 
-    public login(String Username, String Password) {
+    public login(String Name, String Username, String Password) {
+        this.Name = Name;
         this.Username = Username;
         this.Password = Password;
+    }
+
+    public String getName() {
+        return Name;
     }
 
     public String getUsername() {

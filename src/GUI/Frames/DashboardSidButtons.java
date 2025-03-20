@@ -23,7 +23,7 @@ public class DashboardSidButtons extends javax.swing.JFrame {
     private home homePanel;
     private String username;
     ArrayList<login> users;
-    login name;
+    static login name;
 
     public DashboardSidButtons(ArrayList<studyante> students,ArrayList<login> users,login name) {
         this.stu = students;
@@ -34,7 +34,7 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         this.name = name;
         initComponents();
 
-        txtgreets.setText("Welcome " + name.getUsername() + "!");
+        txtgreets.setText("Welcome " + name.getName() + "!");
         
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null); 
@@ -254,17 +254,20 @@ public class DashboardSidButtons extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ViewPanel)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, 0)
+                        .addComponent(ViewPanel)
+                        .addGap(0, 0, 0))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(ViewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE))
+                .addComponent(ViewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -299,8 +302,8 @@ public class DashboardSidButtons extends javax.swing.JFrame {
 //    button for HOMEPANEL
     private void lblHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHomeMouseClicked
         ViewPanel.setViewportView(homePanel);
-        ViewPanel.revalidate();
-        ViewPanel.repaint();
+//        ViewPanel.revalidate();
+//        ViewPanel.repaint();
     }//GEN-LAST:event_lblHomeMouseClicked
 
     private void lblHomeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHomeMouseEntered
@@ -319,6 +322,8 @@ public class DashboardSidButtons extends javax.swing.JFrame {
 
         if (result == JOptionPane.YES_OPTION) {
             this.dispose(); 
+            
+            new LoginForm(null,true,stu,users).setVisible(true);
         }
     }//GEN-LAST:event_btnLogoutMouseClicked
 
@@ -365,8 +370,8 @@ public class DashboardSidButtons extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             ArrayList<studyante> students = new ArrayList<>();
             ArrayList<login> users = new ArrayList<>();
-            login names;
-            new DashboardSidButtons(students, users, names).setVisible(true);
+           
+            new DashboardSidButtons(students, users, name).setVisible(true);
         });
     }
 

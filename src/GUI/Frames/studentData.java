@@ -5,7 +5,11 @@
 package GUI.Frames;
 
 import modelUi.studyante;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import Function.txtField;
 import javax.swing.JOptionPane;
@@ -17,10 +21,11 @@ public class studentData extends javax.swing.JPanel {
     private static DefaultTableModel model;
     private statistics statsPanel;
     private final txtField txt = new txtField();
+    private ArrayList<studyante> deletedStudents = new ArrayList<>();
 
     public studentData(ArrayList<studyante> student, statistics statsPanel) {
         initComponents();
-         this.stu = new ArrayList<>();
+        this.stu = new ArrayList<>();
         this.statsPanel = statsPanel;
 
         if (model == null) {
@@ -29,8 +34,32 @@ public class studentData extends javax.swing.JPanel {
             stuTable.setModel(model);
         }
 
-        loadStudentData(); // Load students AFTER initializing model
-        clearTable(); // Ensure table updates
+        loadStudentData(); // loads after init the data
+        loadDeletedStudentData();
+        newTable();
+    }
+
+    private String generateStudentID() {
+        int maxId = 0;
+
+        // Find the highest ID number
+        for (studyante s : stu) {
+            String idStr = s.getStuID();
+            if (idStr.startsWith("STU")) {
+                try {
+                    int idNum = Integer.parseInt(idStr.substring(3));
+                    if (idNum > maxId) {
+                        maxId = idNum;
+                    }
+                } catch (NumberFormatException e) {
+
+                }
+            }
+        }
+
+        // Generate new ID with incremented number
+        int nextId = maxId + 1;
+        return String.format("STU%03d", nextId); // Format: STU001, STU002, etc.
     }
 
     /**
@@ -42,11 +71,12 @@ public class studentData extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         stuTable = new GUI.CustomComponents.MyTable();
         jPanel4 = new javax.swing.JPanel();
-        txtID2 = new javax.swing.JTextField();
         txtFirstName2 = new javax.swing.JTextField();
         txtMiddleName2 = new javax.swing.JTextField();
         txtLastName2 = new javax.swing.JTextField();
@@ -57,15 +87,21 @@ public class studentData extends javax.swing.JPanel {
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
+        txtAddress = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        txtPhoneNo = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         btnAdd = new GUI.CustomComponents.MyButton();
         btnDelete = new GUI.CustomComponents.MyButton();
         btnUpdate = new GUI.CustomComponents.MyButton();
         txtSearch = new GUI.CustomComponents.MyTextField();
+        btnRetrive = new GUI.CustomComponents.MyButton();
+
+        jScrollPane1.setViewportView(jTree1);
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -74,11 +110,11 @@ public class studentData extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Student ID", "Name", "Gender", "Course", "Year", "Status"
+                "Student ID", "Name", "Address", "Phone no.", "Gender", "Course", "Year", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -90,21 +126,6 @@ public class studentData extends javax.swing.JPanel {
 
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 3, true), "Student Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Print", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
-
-        txtID2.setText("Enter student ID");
-        txtID2.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtID2FocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtID2FocusLost(evt);
-            }
-        });
-        txtID2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtID2MouseClicked(evt);
-            }
-        });
 
         txtFirstName2.setText("Enter student Firstname");
         txtFirstName2.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -186,10 +207,6 @@ public class studentData extends javax.swing.JPanel {
         jLabel19.setForeground(new java.awt.Color(255, 255, 255));
         jLabel19.setText("LASTNAME:");
 
-        jLabel20.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel20.setText("STUDENT ID:");
-
         jLabel21.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(255, 255, 255));
         jLabel21.setText("GENDER:");
@@ -206,6 +223,44 @@ public class studentData extends javax.swing.JPanel {
         jLabel24.setForeground(new java.awt.Color(255, 255, 255));
         jLabel24.setText("STATUS:");
 
+        txtAddress.setText("Enter student Address");
+        txtAddress.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtAddressFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtAddressFocusLost(evt);
+            }
+        });
+        txtAddress.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAddressActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("ADDRESS:");
+
+        txtPhoneNo.setText("Enter student Phone no.");
+        txtPhoneNo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPhoneNoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPhoneNoFocusLost(evt);
+            }
+        });
+        txtPhoneNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPhoneNoActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("PHONE NO. :");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -213,66 +268,76 @@ public class studentData extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel20)
-                    .addComponent(txtID2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFirstName2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17)
-                    .addComponent(txtMiddleName2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtLastName2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18)
-                    .addComponent(jLabel19))
-                .addGap(38, 38, 38)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(txtFirstName2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel17)
+                            .addComponent(txtMiddleName2, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                            .addComponent(txtLastName2)
+                            .addComponent(jLabel18)
+                            .addComponent(jLabel19))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtPhoneNo)
+                                    .addComponent(jLabel21)
+                                    .addComponent(jLabel2)
+                                    .addComponent(cbGender2, 0, 200, Short.MAX_VALUE)))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel1)))))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbStatus2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbYear2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(cbGender2, javax.swing.GroupLayout.Alignment.LEADING, 0, 180, Short.MAX_VALUE)
-                        .addComponent(cbCourse2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel21)
                     .addComponent(jLabel22)
+                    .addComponent(cbCourse2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel23)
+                    .addComponent(cbYear2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel24))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20)
-                    .addComponent(jLabel21))
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel22))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cbGender2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtID2))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFirstName2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbCourse2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel23))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtMiddleName2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbYear2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPhoneNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel22)
+                        .addComponent(jLabel24)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbCourse2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel23)
-                        .addGap(140, 140, 140))
+                        .addComponent(cbStatus2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtFirstName2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel18)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtMiddleName2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbYear2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel19)
-                            .addComponent(jLabel24))
+                            .addComponent(jLabel21))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtLastName2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbStatus2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(40, 40, 40))))
+                            .addComponent(cbGender2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         btnAdd.setBackground(new java.awt.Color(255, 255, 255));
@@ -337,6 +402,21 @@ public class studentData extends javax.swing.JPanel {
             }
         });
 
+        btnRetrive.setBackground(new java.awt.Color(255, 255, 255));
+        btnRetrive.setForeground(new java.awt.Color(0, 0, 0));
+        btnRetrive.setText("RETRIVE");
+        btnRetrive.setBorderColor(new java.awt.Color(255, 255, 255));
+        btnRetrive.setColor(new java.awt.Color(255, 255, 255));
+        btnRetrive.setColorClick(new java.awt.Color(204, 204, 204));
+        btnRetrive.setColorOver(new java.awt.Color(153, 153, 153));
+        btnRetrive.setFont(new java.awt.Font("Segoe Print", 1, 18)); // NOI18N
+        btnRetrive.setRadius(40);
+        btnRetrive.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRetriveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -349,38 +429,39 @@ public class studentData extends javax.swing.JPanel {
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
+                                .addComponent(txtSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(13, 13, 13)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(34, 34, 34))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(txtSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(15, 15, 15))))))
+                                    .addComponent(btnRetrive, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnDelete, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(34, 34, 34))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
                         .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(57, 57, 57)
+                        .addGap(18, 18, 18)
                         .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnRetrive, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -397,40 +478,31 @@ public class studentData extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cbYear2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbYear2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbYear2ActionPerformed
-
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
         String searchText = txtSearch.getText().trim().toLowerCase();
 
         if (searchText.isEmpty()) {
-            restoreTableData(); // Restore full table when search is cleared
+            restoreTableData();
             return;
         }
 
-        model.setRowCount(0); // Clear table before search
-        boolean found = false; // Track if any result is found
+        model.setRowCount(0);
+        boolean found = false;
 
         for (studyante s : stu) {
             boolean matches = false;
 
-            // Check for exact Student ID match
-            if (searchText.matches("\\d+")) { // If input is all numbers
-                int searchID = Integer.parseInt(searchText);
-                if (s.getStuID() == searchID) {
-                    matches = true;
-                }
-            } // Check for exact match in other fields
-            else if (s.getFirstName().equalsIgnoreCase(searchText)
-                    || s.getMiddleInitial().equalsIgnoreCase(searchText)
-                    || s.getLastName().equalsIgnoreCase(searchText)
-                    || s.getGender().equalsIgnoreCase(searchText)
-                    || // Male/Female match
-                    s.getCourse().equalsIgnoreCase(searchText)
-                    || s.getYearLvl().equalsIgnoreCase(searchText)
-                    || s.getStatus().equalsIgnoreCase(searchText)) {
-
+            if (s.getStuID().toLowerCase().equals(searchText)) {
+                matches = true;
+            } else if (s.getFirstName().toLowerCase().equals(searchText)
+                    || s.getMiddleInitial().toLowerCase().equals(searchText)
+                    || s.getLastName().toLowerCase().equals(searchText)
+                    || s.getAddress().toLowerCase().equals(searchText)
+                    || s.getPhoneNo().toLowerCase().equals(searchText)
+                    || s.getGender().toLowerCase().equals(searchText)
+                    || s.getCourse().toLowerCase().equals(searchText)
+                    || s.getYearLvl().toLowerCase().equals(searchText)
+                    || s.getStatus().toLowerCase().equals(searchText)) {
                 matches = true;
             }
 
@@ -438,6 +510,8 @@ public class studentData extends javax.swing.JPanel {
                 model.addRow(new Object[]{
                     s.getStuID(),
                     s.getFullName(),
+                    s.getAddress(),
+                    s.getPhoneNo(),
                     s.getGender(),
                     s.getCourse(),
                     s.getYearLvl(),
@@ -447,219 +521,257 @@ public class studentData extends javax.swing.JPanel {
             }
         }
 
-        // If no matching results were found, show an alert
         if (!found) {
             JOptionPane.showMessageDialog(this, "No matching student record found!", "Search Result", JOptionPane.INFORMATION_MESSAGE);
-            restoreTableData(); // Restore full table display if nothing is found
+            restoreTableData();
         }
     }//GEN-LAST:event_txtSearchActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         try {
-            String idText = txtID2.getText().trim();
 
-            // Prevent using placeholder text as input
-            if (idText.equals("Enter student ID") || idText.isEmpty() || !idText.matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "Student ID must contain only numbers!", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            String stuID = generateStudentID();
 
-            int stuID = Integer.parseInt(idText);
-
-            // Check if Student ID already exists
-            for (studyante s : stu) {
-                if (s.getStuID() == stuID) {
-                    JOptionPane.showMessageDialog(this, "Student ID already exists!", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-
-            // Get text input fields and prevent placeholder text
             String firstName = txtFirstName2.getText().trim();
             String lastName = txtLastName2.getText().trim();
             String middleInitial = txtMiddleName2.getText().trim();
+            String address = txtAddress.getText().trim();
+            String phoneNo = txtPhoneNo.getText().trim();
 
-            // Validate that names contain only letters and spaces
             if (!firstName.matches("[a-zA-Z ]+") || !lastName.matches("[a-zA-Z ]+")) {
                 JOptionPane.showMessageDialog(this, "First Name and Last Name must only contain letters!", "Input Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Ensure First Name and Last Name are not empty or placeholders
             if (firstName.equals("Enter student Firstname") || firstName.isEmpty()
                     || lastName.equals("Enter student Lastname") || lastName.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "First Name and Last Name are required!", "Input Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Ensure middle name is not blank (keep it empty if unchanged)
+//            middlename Validation
             if (middleInitial.equals("Enter student Middlename") || middleInitial.isEmpty()) {
-                middleInitial = ""; // Keep blank instead of placeholder
+                middleInitial = "";
             }
 
-            // Validate middle initial if entered (must contain only letters)
-            if (!middleInitial.isEmpty() && !middleInitial.matches("[a-zA-Z]+")) {
+            if (!middleInitial.isEmpty() && !middleInitial.matches("[a-zA-Z ]+")) {
                 JOptionPane.showMessageDialog(this, "Middle Name must only contain letters!", "Input Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Get combo box selections
+            if (address.equals("Enter student Address") || address.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Address is required!", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (phoneNo.equals("Enter student Phone Number") || phoneNo.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Phone Number is required!", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!phoneNo.matches("\\d{11}")) {
+                JOptionPane.showMessageDialog(this, "Phone Number must contain exactly 11 digits!", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             int genderIndex = cbGender2.getSelectedIndex();
             int courseIndex = cbCourse2.getSelectedIndex();
             int yearLvlIndex = cbYear2.getSelectedIndex();
             int statusIndex = cbStatus2.getSelectedIndex();
 
-            // Ensure valid selections for combo boxes
             if (genderIndex == 0 || courseIndex == 0 || yearLvlIndex == 0 || statusIndex == 0) {
                 JOptionPane.showMessageDialog(this, "Please select valid options for Gender, Course, Year Level, and Status!", "Selection Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Get selected values after validation
             String gender = (String) cbGender2.getSelectedItem();
             String course = (String) cbCourse2.getSelectedItem();
             String yearLvl = (String) cbYear2.getSelectedItem();
             String status = (String) cbStatus2.getSelectedItem();
 
-            // Add new student to the list
-            stu.add(new studyante(stuID, firstName, middleInitial, lastName, gender, course, yearLvl, status));
+            // Check for duplicate
+            if (isDuplicateStudent(firstName, middleInitial, lastName, address, phoneNo)) {
+                JOptionPane.showMessageDialog(this,
+                        "A student with similar details already exists in the system.\n"
+                        + "Please verify the information and try again.",
+                        "Duplicate Student", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-            // Refresh the table
-            clearTable(); // ✅ Clears table and reloads student list
-            saveStudentData(); // ✅ Save after updating table
-            resetFields(); // ✅ Clears input fields
-            stuTable.repaint(); // ✅ Refresh UI
+            studyante newStudent = new studyante(stuID, firstName, middleInitial, lastName, address, phoneNo, gender, course, yearLvl, status);
+            stu.add(newStudent);
+
+            newTable();
+            saveStudentData();
+            resetFields();
+            stuTable.repaint();
             stuTable.revalidate();
 
             JOptionPane.showMessageDialog(this, "Student added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Invalid Student ID format!", "Input Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error adding student: " + e.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
-        
-          
-        if (statsPanel != null) {  // UPDATED
+
+        if (statsPanel != null) {
             statsPanel.refreshData(stu);
         }
 
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void txtID2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtID2FocusGained
-        if (txtID2.getText().equals("Enter student ID")) {
-            txtID2.setText(null);
-        }
-    }//GEN-LAST:event_txtID2FocusGained
-
-    private void txtID2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtID2FocusLost
-        if (txtID2.getText().isEmpty()) {
-            txtID2.setText("Enter student ID");
-        }
-    }//GEN-LAST:event_txtID2FocusLost
-
-    private void txtFirstName2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFirstName2FocusGained
-        if (txtFirstName2.getText().equals("Enter student Firstname")) {
-            txtFirstName2.setText(null);
-        }
-    }//GEN-LAST:event_txtFirstName2FocusGained
-
-    private void txtFirstName2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFirstName2FocusLost
-        if (txtFirstName2.getText().isEmpty()) {
-            txtFirstName2.setText("Enter student Firstname");
-        }
-    }//GEN-LAST:event_txtFirstName2FocusLost
-
-    private void txtMiddleName2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMiddleName2FocusGained
-        if (txtMiddleName2.getText().equals("Enter student Middlename")) {
-            txtMiddleName2.setText(null);
-        }
-     }//GEN-LAST:event_txtMiddleName2FocusGained
-
-    private void txtMiddleName2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMiddleName2FocusLost
-        if (txtMiddleName2.getText().isEmpty()) {
-            txtMiddleName2.setText("Enter student Middlename");
-        }
-    }//GEN-LAST:event_txtMiddleName2FocusLost
-
-    private void txtLastName2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLastName2FocusGained
-        if (txtLastName2.getText().equals("Enter student Lastname")) {
-            txtLastName2.setText(null);
-        }
-    }//GEN-LAST:event_txtLastName2FocusGained
-
-    private void txtLastName2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLastName2FocusLost
-        if (txtLastName2.getText().isEmpty()) {
-            txtLastName2.setText("Enter student Lastname");
-        }
-    }//GEN-LAST:event_txtLastName2FocusLost
-
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        int selectedRow = stuTable.getSelectedRow();
+        try {
+            int selectedRow = stuTable.getSelectedRow();
 
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a student to update!", "Selection Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Please select a student to update!", "Selection Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            studyante selectedStudent = stu.get(selectedRow);
+            String originalStudentID = selectedStudent.getStuID();
+
+            // Get input values but preserve original data if empty or placeholder text
+            String firstName = txtFirstName2.getText().trim();
+            String lastName = txtLastName2.getText().trim();
+            String middleInitial = txtMiddleName2.getText().trim();
+            String address = txtAddress.getText().trim();
+            String phoneNo = txtPhoneNo.getText().trim();
+
+            // Preserve original data if fields are empty or contain placeholder text
+            if (firstName.equals("Enter student Firstname") || firstName.isEmpty()) {
+                firstName = selectedStudent.getFirstName();
+            }
+
+            if (lastName.equals("Enter student Lastname") || lastName.isEmpty()) {
+                lastName = selectedStudent.getLastName();
+            }
+
+            if (middleInitial.equals("Enter student Middlename") || middleInitial.isEmpty()) {
+                middleInitial = selectedStudent.getMiddleInitial();
+            }
+
+            if (address.equals("Enter student Address") || address.isEmpty()) {
+                address = selectedStudent.getAddress();
+            }
+
+            // Validate first name and last name when they're actually changed
+            if (!firstName.equals(selectedStudent.getFirstName())
+                    && !firstName.matches("[a-zA-Z ]+")) {
+                JOptionPane.showMessageDialog(this, "First Name must only contain letters!", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!lastName.equals(selectedStudent.getLastName())
+                    && !lastName.matches("[a-zA-Z ]+")) {
+                JOptionPane.showMessageDialog(this, "Last Name must only contain letters!", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Middle name validation only if it was changed
+            if (!middleInitial.equals(selectedStudent.getMiddleInitial())
+                    && !middleInitial.isEmpty()
+                    && !middleInitial.matches("[a-zA-Z ]+")) {
+                JOptionPane.showMessageDialog(this, "Middle Name must only contain letters!", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (phoneNo.equals("Enter student Phone no.") || phoneNo.isEmpty()) {
+                phoneNo = selectedStudent.getPhoneNo();
+            } else {
+
+                if (!phoneNo.trim().equals(selectedStudent.getPhoneNo().trim())) {
+
+                    if (!phoneNo.matches("\\d{11}")) {
+                        JOptionPane.showMessageDialog(this, "Phone Number must contain exactly 11 digits!", "Input Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                } else {
+                    phoneNo = selectedStudent.getPhoneNo();
+                }
+            }
+
+            // Get dropdown selections and preserve original values if not selected
+            String gender = cbGender2.getSelectedIndex() == 0
+                    ? selectedStudent.getGender()
+                    : cbGender2.getSelectedItem().toString();
+
+            String course = cbCourse2.getSelectedIndex() == 0
+                    ? selectedStudent.getCourse()
+                    : cbCourse2.getSelectedItem().toString();
+
+            String yearLvl = cbYear2.getSelectedIndex() == 0
+                    ? selectedStudent.getYearLvl()
+                    : cbYear2.getSelectedItem().toString();
+
+            String status = cbStatus2.getSelectedIndex() == 0
+                    ? selectedStudent.getStatus()
+                    : cbStatus2.getSelectedItem().toString();
+
+            // Check for duplicate but exclude the current student
+            for (studyante s : stu) {
+                // Skip comparing with itself
+                if (s.getStuID().equals(originalStudentID)) {
+                    continue;
+                }
+
+                // Check if there's another student with the same details
+                if (s.getFirstName().equalsIgnoreCase(firstName)
+                        && s.getLastName().equalsIgnoreCase(lastName)
+                        && s.getMiddleInitial().equalsIgnoreCase(middleInitial)
+                        && s.getAddress().equalsIgnoreCase(address)
+                        && s.getPhoneNo().equals(phoneNo)) {
+
+                    JOptionPane.showMessageDialog(this,
+                            "A student with similar details already exists in the system.\n"
+                            + "Please verify the information and try again.",
+                            "Duplicate Student", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+
+            // Check if any changes were made
+            if (firstName.equals(selectedStudent.getFirstName())
+                    && lastName.equals(selectedStudent.getLastName())
+                    && middleInitial.equals(selectedStudent.getMiddleInitial())
+                    && address.equals(selectedStudent.getAddress())
+                    && phoneNo.equals(selectedStudent.getPhoneNo())
+                    && gender.equals(selectedStudent.getGender())
+                    && course.equals(selectedStudent.getCourse())
+                    && yearLvl.equals(selectedStudent.getYearLvl())
+                    && status.equals(selectedStudent.getStatus())) {
+
+                JOptionPane.showMessageDialog(this, "No changes were made!", "Update Notice", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Update the student data
+            selectedStudent.setFirstName(firstName);
+            selectedStudent.setMiddleInitial(middleInitial);
+            selectedStudent.setLastName(lastName);
+            selectedStudent.setAddress(address);
+            selectedStudent.setPhoneNo(phoneNo);
+            selectedStudent.setGender(gender);
+            selectedStudent.setCourse(course);
+            selectedStudent.setYearLvl(yearLvl);
+            selectedStudent.setStatus(status);
+
+            saveStudentData();
+            newTable();
+            resetFields();
+            stuTable.repaint();
+            stuTable.revalidate();
+
+            JOptionPane.showMessageDialog(this, "Student updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            if (statsPanel != null) {
+                statsPanel.refreshData(stu);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error updating student: " + e.getMessage(), "Update Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
-
-        // Get selected student object
-        studyante selectedStudent = stu.get(selectedRow);
-
-        // Get text fields, checking if they are empty or placeholders
-        String firstName = txtFirstName2.getText().trim();
-        String lastName = txtLastName2.getText().trim();
-        String middleInitial = txtMiddleName2.getText().trim();
-
-        // Keep the old data if the field is unchanged or still has the placeholder
-        if (firstName.equals("Enter student Firstname") || firstName.isEmpty()) {
-            firstName = selectedStudent.getFirstName();
-        }
-        if (lastName.equals("Enter student Lastname") || lastName.isEmpty()) {
-            lastName = selectedStudent.getLastName();
-        }
-        if (middleInitial.equals("Enter student Middlename") || middleInitial.isEmpty()) {
-            middleInitial = selectedStudent.getMiddleInitial();
-        }
-
-        // Handle combo box selections (if index is 0, keep the old value)
-        String gender = cbGender2.getSelectedIndex() == 0 ? selectedStudent.getGender() : (String) cbGender2.getSelectedItem();
-        String course = cbCourse2.getSelectedIndex() == 0 ? selectedStudent.getCourse() : (String) cbCourse2.getSelectedItem();
-        String yearLvl = cbYear2.getSelectedIndex() == 0 ? selectedStudent.getYearLvl() : (String) cbYear2.getSelectedItem();
-        String status = cbStatus2.getSelectedIndex() == 0 ? selectedStudent.getStatus() : (String) cbStatus2.getSelectedItem();
-
-        // Check if anything has actually changed
-        if (firstName.equals(selectedStudent.getFirstName())
-                && lastName.equals(selectedStudent.getLastName())
-                && middleInitial.equals(selectedStudent.getMiddleInitial())
-                && gender.equals(selectedStudent.getGender())
-                && course.equals(selectedStudent.getCourse())
-                && yearLvl.equals(selectedStudent.getYearLvl())
-                && status.equals(selectedStudent.getStatus())) {
-
-            JOptionPane.showMessageDialog(this, "No changes were made!", "Update Notice", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Update the student details (DO NOT UPDATE Student ID)
-        selectedStudent.setFirstName(firstName);
-        selectedStudent.setMiddleInitial(middleInitial);
-        selectedStudent.setLastName(lastName);
-        selectedStudent.setGender(gender);
-        selectedStudent.setCourse(course);
-        selectedStudent.setYearLvl(yearLvl);
-        selectedStudent.setStatus(status);
-
-        // Save updated data
-        saveStudentData();
-        clearTable();
-        resetFields(); // Clear input fields after update
-        stuTable.repaint();
-        stuTable.revalidate();
-
-        JOptionPane.showMessageDialog(this, "Student updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        
-          
-        if (statsPanel != null) {  // UPDATED
-            statsPanel.refreshData(stu);
-        }
-        
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -671,33 +783,21 @@ public class studentData extends javax.swing.JPanel {
 
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this student?", "Confirm Deletion", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirm == JOptionPane.YES_OPTION) {
+            // Add to deleted students list before removing
+            deletedStudents.add(stu.get(selectedRow));
+            saveDeletedStudentData(); // Save the deleted students data
+
+            // Remove from active students
             stu.remove(selectedRow);
             saveStudentData();
-            clearTable();
+            newTable();
             JOptionPane.showMessageDialog(this, "Student deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            
         }
-        
-          
-        if (statsPanel != null) {  // UPDATED
+
+        if (statsPanel != null) {
             statsPanel.refreshData(stu);
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
-
-    private void txtID2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtID2MouseClicked
-        txt.checkTextField(txtID2, "Enter student ID");
-    }//GEN-LAST:event_txtID2MouseClicked
-
-    private void txtFirstName2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtFirstName2MouseClicked
-        txt.checkTextField(txtFirstName2, "Enter student Firstname");    }//GEN-LAST:event_txtFirstName2MouseClicked
-
-    private void txtMiddleName2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMiddleName2MouseClicked
-        txt.checkTextField(txtMiddleName2, "Enter student Middlename");
-    }//GEN-LAST:event_txtMiddleName2MouseClicked
-
-    private void txtLastName2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtLastName2MouseClicked
-        txt.checkTextField(txtLastName2, "Enter student Lastname");
-    }//GEN-LAST:event_txtLastName2MouseClicked
 
     private void txtSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchFocusGained
         if (txtSearch.getText().equals("Search student id, name, gender, course, year, and status")) {
@@ -711,31 +811,309 @@ public class studentData extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtSearchFocusLost
 
+    private void cbYear2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbYear2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbYear2ActionPerformed
+
     private void cbStatus2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbStatus2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbStatus2ActionPerformed
+
+    private void txtLastName2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtLastName2MouseClicked
+        txt.checkTextField(txtLastName2, "Enter student Lastname");
+    }//GEN-LAST:event_txtLastName2MouseClicked
+
+    private void txtLastName2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLastName2FocusLost
+        if (txtLastName2.getText().isEmpty()) {
+            txtLastName2.setText("Enter student Lastname");
+        }
+    }//GEN-LAST:event_txtLastName2FocusLost
+
+    private void txtLastName2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLastName2FocusGained
+        if (txtLastName2.getText().equals("Enter student Lastname")) {
+            txtLastName2.setText(null);
+        }
+    }//GEN-LAST:event_txtLastName2FocusGained
 
     private void txtMiddleName2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMiddleName2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMiddleName2ActionPerformed
 
-    private void clearTable() {
-        if (model == null) {
-            System.out.println("⚠ Table model is null, cannot clear table!");
+    private void txtMiddleName2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMiddleName2MouseClicked
+        txt.checkTextField(txtMiddleName2, "Enter student Middlename");
+    }//GEN-LAST:event_txtMiddleName2MouseClicked
+
+    private void txtMiddleName2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMiddleName2FocusLost
+        if (txtMiddleName2.getText().isEmpty()) {
+            txtMiddleName2.setText("Enter student Middlename");
+        }
+    }//GEN-LAST:event_txtMiddleName2FocusLost
+
+    private void txtMiddleName2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMiddleName2FocusGained
+        if (txtMiddleName2.getText().equals("Enter student Middlename")) {
+            txtMiddleName2.setText(null);
+        }
+    }//GEN-LAST:event_txtMiddleName2FocusGained
+
+    private void txtFirstName2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtFirstName2MouseClicked
+
+    }//GEN-LAST:event_txtFirstName2MouseClicked
+
+    private void txtFirstName2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFirstName2FocusLost
+        if (txtFirstName2.getText().isEmpty()) {
+            txtFirstName2.setText("Enter student Firstname");
+        }
+    }//GEN-LAST:event_txtFirstName2FocusLost
+
+    private void txtFirstName2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFirstName2FocusGained
+        if (txtFirstName2.getText().equals("Enter student Firstname")) {
+            txtFirstName2.setText(null);
+        }
+    }//GEN-LAST:event_txtFirstName2FocusGained
+
+    private void txtAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddressActionPerformed
+
+    }//GEN-LAST:event_txtAddressActionPerformed
+
+    private void txtPhoneNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneNoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPhoneNoActionPerformed
+
+    private void txtAddressFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAddressFocusGained
+        if (txtAddress.getText().equals("Enter student Address")) {
+            txtAddress.setText(null);
+        }
+    }//GEN-LAST:event_txtAddressFocusGained
+
+    private void txtAddressFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAddressFocusLost
+        if (txtAddress.getText().isEmpty()) {
+            txtAddress.setText("Enter student Address");
+            
+        }
+    }//GEN-LAST:event_txtAddressFocusLost
+
+    private void txtPhoneNoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneNoFocusGained
+        if (txtPhoneNo.getText().equals("Enter student Phone no.")) {
+            txtPhoneNo.setText(null);
+        }
+    }//GEN-LAST:event_txtPhoneNoFocusGained
+
+    private void txtPhoneNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneNoFocusLost
+        if (txtPhoneNo.getText().isEmpty()) {
+            txtPhoneNo.setText("Enter student Phone no.");
+        }
+    }//GEN-LAST:event_txtPhoneNoFocusLost
+
+    private void btnRetriveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetriveActionPerformed
+        if (deletedStudents.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No deleted students found.", "Recycle Bin", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+        
+        /*
+        *
+        JDIALOG
+        *
+        */
+        
+        // show deleted students
+        javax.swing.JDialog retrieveDialog = new javax.swing.JDialog((java.awt.Frame) null, "Retrieve Deleted Students", true);
+        retrieveDialog.setSize(800, 500);
+        retrieveDialog.setLocationRelativeTo(this);
 
+        javax.swing.JPanel mainPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+
+        //table model for deleted students
+        DefaultTableModel deletedModel = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Student ID", "Name", "Address", "Phone No", "Gender", "Course", "Year Level", "Status"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        //table for deleted students
+        GUI.CustomComponents.MyTable deletedTable = new GUI.CustomComponents.MyTable();
+        deletedTable.setModel(deletedModel);
+
+        
+        for (studyante s : deletedStudents) {
+            deletedModel.addRow(new Object[]{
+                s.getStuID(),
+                s.getFullName(),
+                s.getAddress(),
+                s.getPhoneNo(),
+                s.getGender(),
+                s.getCourse(),
+                s.getYearLvl(),
+                s.getStatus()
+            });
+        }
+
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(deletedTable);
+        mainPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
+
+        //buttons panel
+        javax.swing.JPanel buttonsPanel = new javax.swing.JPanel();
+
+        GUI.CustomComponents.MyButton restoreButton = new GUI.CustomComponents.MyButton();
+        restoreButton.setText("Restore");
+        restoreButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                int selectedRow = deletedTable.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(retrieveDialog, "Please select a student to restore!", "Selection Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Restore
+                studyante studentToRestore = deletedStudents.get(selectedRow);
+                stu.add(studentToRestore);
+                deletedStudents.remove(selectedRow);
+
+                // Save both datasets
+                saveStudentData();
+                saveDeletedStudentData();
+
+                // Update the table
+                deletedModel.removeRow(selectedRow);
+                newTable();
+
+                if (statsPanel != null) {
+                    statsPanel.refreshData(stu);
+                }
+
+                JOptionPane.showMessageDialog(retrieveDialog, "Student restored successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                // Close dialog if no more deleted students
+                if (deletedStudents.isEmpty()) {
+                    retrieveDialog.dispose();
+                }
+            }
+        });
+
+        GUI.CustomComponents.MyButton deleteButton = new GUI.CustomComponents.MyButton();
+        deleteButton.setText("Permanently Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                int selectedRow = deletedTable.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(retrieveDialog, "Please select a student to permanently delete!", "Selection Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                int confirm = JOptionPane.showConfirmDialog(retrieveDialog, "Are you sure you want to permanently delete this student?\nThis action cannot be undone.", "Confirm Permanent Deletion", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    // Remove from deleted students
+                    deletedStudents.remove(selectedRow);
+                    saveDeletedStudentData();
+
+                    // Update the table
+                    deletedModel.removeRow(selectedRow);
+
+                    JOptionPane.showMessageDialog(retrieveDialog, "Student permanently deleted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Close dialog if no more deleted students
+                    if (deletedStudents.isEmpty()) {
+                        retrieveDialog.dispose();
+                    }
+                }
+            }
+        });
+
+        GUI.CustomComponents.MyButton closeButton = new GUI.CustomComponents.MyButton();
+        closeButton.setText("Close");
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                retrieveDialog.dispose();
+            }
+        });
+
+        buttonsPanel.add(restoreButton);
+        buttonsPanel.add(deleteButton);
+        buttonsPanel.add(closeButton);
+
+        mainPanel.add(buttonsPanel, java.awt.BorderLayout.SOUTH);
+
+        retrieveDialog.add(mainPanel);
+        retrieveDialog.setVisible(true);
+    }//GEN-LAST:event_btnRetriveActionPerformed
+
+    private boolean isDuplicateStudent(String firstName, String middleInitial, String lastName, String address, String phoneNo) {
+
+        firstName = firstName.toLowerCase().trim();
+        middleInitial = middleInitial.toLowerCase().trim();
+        lastName = lastName.toLowerCase().trim();
+        address = address.toLowerCase().trim();
+        phoneNo = phoneNo.trim();
+
+        for (studyante student : stu) {
+
+            boolean nameMatches = student.getFirstName().toLowerCase().trim().equals(firstName)
+                    && student.getLastName().toLowerCase().trim().equals(lastName);
+
+            if (!middleInitial.isEmpty() && !student.getMiddleInitial().isEmpty()) {
+                nameMatches = nameMatches && student.getMiddleInitial().toLowerCase().trim().equals(middleInitial);
+            }
+
+            boolean addressMatches = student.getAddress().toLowerCase().trim().equals(address);
+            boolean phoneMatches = student.getPhoneNo().trim().equals(phoneNo);
+
+            if (nameMatches && (addressMatches || phoneMatches)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void newTable() {
+        if (model == null) {
+            System.out.println("Table model is null, cannot clear table!");
+            return;
+        }
         model.setRowCount(0); // Clears existing rows
-        System.out.println("🗑 Clearing table and adding students: " + stu.size());
-
+        System.out.println("Clearing table and adding students: " + stu.size());
         for (studyante s : stu) {
-            System.out.println("📌 Adding Student: " + s.getStuID() + " | " + s.getFullName() + " | " + s.getCourse());
-            model.addRow(new Object[]{s.getStuID(), s.getFullName(), s.getGender(), s.getCourse(), s.getYearLvl(), s.getStatus()});
+            System.out.println("Adding Student: " + s.getStuID() + " | " + s.getFullName() + " | " + s.getCourse());
+            model.addRow(new Object[]{
+                s.getStuID(),
+                s.getFullName(),
+                s.getAddress(),
+                s.getPhoneNo(),
+                s.getGender(),
+                s.getCourse(),
+                s.getYearLvl(),
+                s.getStatus()
+            });
+        }
+    }
+
+    private void loadDeletedStudentData() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("deleted_students.txt"))) {
+            deletedStudents = (ArrayList<studyante>) ois.readObject();
+            System.out.println("Deleted students data loaded successfully! Total: " + deletedStudents.size());
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("No deleted students data found or error loading data.");
+            deletedStudents = new ArrayList<>(); // Ensure deletedStudents is not null
+        }
+    }
+
+// Add this method to save deleted students data
+    private void saveDeletedStudentData() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("deleted_students.txt"))) {
+            oos.writeObject(deletedStudents);
+            System.out.println("Deleted students data saved successfully! Total: " + deletedStudents.size());
+        } catch (IOException e) {
+            System.out.println("Error saving deleted students data: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void saveStudentData() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("students.dat"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("students.txt"))) {
             oos.writeObject(stu);
         } catch (IOException e) {
             e.printStackTrace();
@@ -744,38 +1122,48 @@ public class studentData extends javax.swing.JPanel {
 
     public void refreshData(ArrayList<studyante> updatedStudents) {
         stu = updatedStudents;
-        clearTable();
+        newTable();
+    }
+
+    private void initializeDeletedStudents() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("deleted_students.txt"))) {
+            deletedStudents = (ArrayList<studyante>) ois.readObject();
+            System.out.println("Deleted students data loaded successfully! Total: " + deletedStudents.size());
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("No deleted students data found or error loading data.");
+            deletedStudents = new ArrayList<>(); // Ensure deletedStudents is not null
+        }
     }
 
     private void loadStudentData() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("students.dat"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("students.txt"))) {
             stu = (ArrayList<studyante>) ois.readObject();
-            System.out.println("✅ Student data loaded successfully! Total students: " + stu.size());
+            System.out.println("Student data loaded successfully! Total students: " + stu.size());
 
             for (studyante s : stu) {
-                System.out.println("📌 Loaded Student: " + s.getStuID() + " | " + s.getFullName() + " | " + s.getCourse());
+                System.out.println("Loaded Student: " + s.getStuID() + " | " + s.getFullName() + " | " + s.getCourse());
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("⚠ No previous data found or error loading data.");
+            System.out.println("No previous data found or error loading data.");
             stu = new ArrayList<>(); // Ensure stu is not null
         }
 
-        clearTable(); // ✅ Ensure table updates AFTER data load
+        newTable();
 
         if (statsPanel != null) {
-            System.out.println("📊 Updating statistics panel...");
-            statsPanel.refreshData(stu); // ✅ Now updating AFTER data load
+            System.out.println("Updating statistics panel...");
+            statsPanel.refreshData(stu);
         } else {
-            System.out.println("⚠ Warning: statsPanel is null, cannot refresh statistics!");
+            System.out.println("Warning: statsPanel is null, cannot refresh statistics!");
         }
     }
 
     private void resetFields() {
-        txtID2.setText("Enter student ID");
         txtFirstName2.setText("Enter student Firstname");
         txtMiddleName2.setText("Enter student Middlename");
         txtLastName2.setText("Enter student Lastname");
-
+        txtAddress.setText("Enter student Address");
+        txtPhoneNo.setText("Enter student Phone no.");
         cbGender2.setSelectedIndex(0);
         cbCourse2.setSelectedIndex(0);
         cbYear2.setSelectedIndex(0);
@@ -792,39 +1180,47 @@ public class studentData extends javax.swing.JPanel {
             model.addRow(new Object[]{
                 s.getStuID(),
                 s.getFullName(),
+                s.getAddress(),
+                s.getPhoneNo(),
                 s.getGender(),
                 s.getCourse(),
                 s.getYearLvl(),
                 s.getStatus()
             });
         }
+
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private GUI.CustomComponents.MyButton btnAdd;
     private GUI.CustomComponents.MyButton btnDelete;
+    private GUI.CustomComponents.MyButton btnRetrive;
     private GUI.CustomComponents.MyButton btnUpdate;
     private javax.swing.JComboBox<String> cbCourse2;
     private javax.swing.JComboBox<String> cbGender2;
     private javax.swing.JComboBox<String> cbStatus2;
     private javax.swing.JComboBox<String> cbYear2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTree jTree1;
     private GUI.CustomComponents.MyTable stuTable;
+    private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtFirstName2;
-    private javax.swing.JTextField txtID2;
     private javax.swing.JTextField txtLastName2;
     private javax.swing.JTextField txtMiddleName2;
+    private javax.swing.JTextField txtPhoneNo;
     private GUI.CustomComponents.MyTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 

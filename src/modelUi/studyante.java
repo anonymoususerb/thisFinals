@@ -6,10 +6,12 @@ import java.io.Serializable;
 public class studyante implements Serializable {
     private static final long serialVersionUID = 1L; // Add serialVersionUID to prevent compatibility issues
 
-    private int stuID;
+    private String stuID;
     private String firstName;
     private String middleInitial;
     private String lastName;
+    private String address;
+    private String phoneNo;
     private String gender;
     private String course;
     private String yearLvl;
@@ -20,16 +22,16 @@ public class studyante implements Serializable {
     public studyante(String subject) {
         this.subject = subject;
     }
-    
-    
 
-    // ✅ Constructor
-    public studyante(int stuID, String firstName, String middleInitial, String lastName,
-                     String gender, String course, String yearLvl, String status) {
+     public studyante(String stuID, String firstName, String middleInitial, String lastName, 
+                    String address, String phoneNo, String gender, String course, 
+                    String yearLvl, String status) {
         this.stuID = stuID;
         this.firstName = firstName;
         this.middleInitial = middleInitial;
         this.lastName = lastName;
+        this.address = address;
+        this.phoneNo = phoneNo;
         this.gender = gender;
         this.course = course;
         this.yearLvl = yearLvl;
@@ -37,9 +39,10 @@ public class studyante implements Serializable {
     }
     
     
+    
 
-    // ✅ Getters
-    public int getStuID() {
+   
+    public String getStuID() {
         return stuID;
     }
 
@@ -55,6 +58,14 @@ public class studyante implements Serializable {
         return lastName;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+    
     public String getGender() {
         return gender;
     }
@@ -72,7 +83,7 @@ public class studyante implements Serializable {
     }
 
     // ✅ Setters (if needed for updates)
-    public void setStuID(int stuID) {
+    public void setStuID(String stuID) {
         this.stuID = stuID;
     }
 
@@ -86,6 +97,14 @@ public class studyante implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    
+      public void setAddress(String address) {  // Added setter for address
+        this.address = address;
+    }
+    
+    public void setPhoneNo(String phoneNo) {  // Added setter for phone number
+        this.phoneNo = phoneNo;
     }
 
     public void setGender(String gender) {
@@ -106,12 +125,12 @@ public class studyante implements Serializable {
         this.status = status;
     }
 
-    // ✅ Returns full name in "Last, First M." format
+   
     public String getFullName() {
         return lastName + ", " + firstName + (middleInitial.isEmpty() ? "" : " " + middleInitial + ".");
     }
 
-    // ✅ Override toString() for debugging
+    
     @Override
     public String toString() {
         return "Student ID: " + stuID + ", Name: " + getFullName() + ", Gender: " + gender +

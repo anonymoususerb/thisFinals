@@ -5,12 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Utility class for managing default subjects by course and year level
- */
+
 public class DefaultSubjects {
     
-    // Maps to store default subjects by course and year
+    
     private static final Map<String, Map<String, List<Subject>>> courseSubjects = new HashMap<>();
     
     // Initialize the default subjects
@@ -22,43 +20,34 @@ public class DefaultSubjects {
         initBSHM();
     }
     
-    /**
-     * Get default subjects for a specific course and year level
-     * 
-     * @param course The course code (e.g., "BSIT", "BSBA")
-     * @param yearLevel The year level (e.g., "1st Year", "2nd Year")
-     * @return List of default subjects for the course and year level
-     */
+    
     public static List<Subject> getDefaultSubjects(String course, String yearLevel) {
         if (course == null || yearLevel == null) {
             return new ArrayList<>();
         }
         
-        // Normalize course code (remove spaces, uppercase)
+       
         String normalizedCourse = course.trim().toUpperCase().replaceAll("\\s+", "");
         
-        // Normalize year level (extract just the number part)
+        
         String normalizedYear = normalizeYearLevel(yearLevel);
         
-        // Get subjects for this course
+       
         Map<String, List<Subject>> yearSubjects = courseSubjects.get(normalizedCourse);
         if (yearSubjects == null) {
             return new ArrayList<>();
         }
         
-        // Get subjects for this year
+       
         List<Subject> subjects = yearSubjects.get(normalizedYear);
         if (subjects == null) {
             return new ArrayList<>();
         }
         
-        // Return a copy of the list to prevent modifications
+        
         return new ArrayList<>(subjects);
     }
     
-    /**
-     * Normalize year level string to standard format (1, 2, 3, 4)
-     */
     private static String normalizeYearLevel(String yearLevel) {
         yearLevel = yearLevel.trim().toLowerCase();
         

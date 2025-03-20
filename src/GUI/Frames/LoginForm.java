@@ -13,6 +13,7 @@ import java.util.ArrayList;
  *
  * @author Asus
  */
+
 public class LoginForm extends javax.swing.JDialog {
 
      ArrayList<studyante> stu = new ArrayList<>();
@@ -27,7 +28,7 @@ public class LoginForm extends javax.swing.JDialog {
         setLocationRelativeTo(null);
         this.pack();
         
-        users.add(new login("admin","admin"));
+        users.add(new login("Admin","admin","admin"));
     }
 
 //    process
@@ -59,8 +60,9 @@ public class LoginForm extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         password = new GUI.CustomComponents.MyPasswordField();
         username = new GUI.CustomComponents.MyTextField();
-        btnLogin = new GUI.CustomComponents.MyButton();
         jLabel4 = new javax.swing.JLabel();
+        btnLogin = new GUI.CustomComponents.MyButton();
+        btnEXIT = new GUI.CustomComponents.MyButton();
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -157,6 +159,8 @@ public class LoginForm extends javax.swing.JDialog {
             }
         });
 
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Dark Blue and Gold  Circle Logo_200x200.png"))); // NOI18N
+
         btnLogin.setBackground(new java.awt.Color(255, 255, 255));
         btnLogin.setForeground(new java.awt.Color(0, 0, 0));
         btnLogin.setText("LOG IN");
@@ -172,7 +176,20 @@ public class LoginForm extends javax.swing.JDialog {
             }
         });
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Dark Blue and Gold  Circle Logo_200x200.png"))); // NOI18N
+        btnEXIT.setBackground(new java.awt.Color(255, 255, 255));
+        btnEXIT.setForeground(new java.awt.Color(0, 0, 0));
+        btnEXIT.setText("EXIT");
+        btnEXIT.setBorderColor(new java.awt.Color(255, 255, 255));
+        btnEXIT.setColor(new java.awt.Color(255, 255, 255));
+        btnEXIT.setColorClick(new java.awt.Color(204, 204, 204));
+        btnEXIT.setColorOver(new java.awt.Color(153, 153, 153));
+        btnEXIT.setFont(new java.awt.Font("Segoe Print", 1, 18)); // NOI18N
+        btnEXIT.setRadius(40);
+        btnEXIT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEXITActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -188,12 +205,15 @@ public class LoginForm extends javax.swing.JDialog {
                             .addComponent(password, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(125, 125, 125)
-                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(108, 108, 108)
                         .addComponent(jLabel4)))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(0, 29, Short.MAX_VALUE)
+                .addComponent(btnEXIT, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,9 +227,11 @@ public class LoginForm extends javax.swing.JDialog {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addGap(50, 50, 50)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEXIT, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -217,7 +239,7 @@ public class LoginForm extends javax.swing.JDialog {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(44, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
         );
@@ -225,7 +247,7 @@ public class LoginForm extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -271,13 +293,13 @@ public class LoginForm extends javax.swing.JDialog {
     }//GEN-LAST:event_passwordActionPerformed
 
     private void passwordFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordFocusGained
-        if (new String(password.getPassword()).equals("password")){
+        if (new String(password.getPassword()).equals("password")) {
             password.setText("");
         }
     }//GEN-LAST:event_passwordFocusGained
 
     private void passwordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordFocusLost
-        if(new String(password.getPassword()).isEmpty()){
+        if (new String(password.getPassword()).isEmpty()) {
             password.setText("password");
         }
     }//GEN-LAST:event_passwordFocusLost
@@ -285,69 +307,88 @@ public class LoginForm extends javax.swing.JDialog {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         onLogin();
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnEXITActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEXITActionPerformed
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit", "CONFIRMATION", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            dispose();
+            JOptionPane.showMessageDialog(null, "Program terminated", "EXITED", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEXITActionPerformed
+
+//    loop for the log in
     private void onLogin() {
         String userName = username.getText();
         String passWord = password.getText();
-        
-        if (username.getText().equals("Please enter your username") || password.getText().equals("password")){
-            JOptionPane.showMessageDialog(null, "Please Fill out this field","Error",JOptionPane.ERROR_MESSAGE);
+
+        if (username.getText().equals("Please enter your username") || password.getText().equals("password")) {
+            JOptionPane.showMessageDialog(null, "Please Fill out this field", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        if (username.getText().isEmpty() ||password.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Please Fill out this field","Error",JOptionPane.ERROR_MESSAGE);
+
+        if (username.getText().isEmpty() || password.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please Fill out this field", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        for(login s : users){
-            if(s.getUsername().equals(userName) || s.getPassword().equals(passWord)){
-                JOptionPane.showMessageDialog(null, "Log in succesfull","ACCESS GRANTED", JOptionPane.INFORMATION_MESSAGE);
-                
+
+        boolean match = false;
+        for (login s : users) {
+            if (s.getUsername().equals(userName) && s.getPassword().equals(passWord)) {
+                JOptionPane.showMessageDialog(null, "Log in successful", "ACCESS GRANTED", JOptionPane.INFORMATION_MESSAGE);
+                match = true;
                 dispose();
-                
-                new DashboardSidButtons(stu,users,s).setVisible(true);
+
+                new DashboardSidButtons(stu, users, s).setVisible(true);
+                break;
             }
         }
-    }
+
+        
+        if (!match) {
+            JOptionPane.showMessageDialog(null, "Either the username or password is incorrect", "INCORRECT", JOptionPane.WARNING_MESSAGE);
+        }
+    
+}
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-    public void run() {
-        LoginForm dialog = new LoginForm(new javax.swing.JFrame(), true);
-        dialog.setVisible(true); // This must be here
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
-});
+    //</editor-fold>
 
-    }
+    /* Create and display the dialog */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            LoginForm dialog = new LoginForm(new javax.swing.JFrame(), true);
+            dialog.setVisible(true); // This must be here
+        }
+    });
+
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private GUI.CustomComponents.MyButton btnEXIT;
     private GUI.CustomComponents.MyButton btnLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

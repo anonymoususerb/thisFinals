@@ -4,23 +4,13 @@ package modelUi;  // Same package as DefaultSubjects
  * Class representing a subject in an academic curriculum
  */
 public class Subject {
-    private String code;         // Subject code (e.g., "COMM101")
-    private String description;  // Subject description/name
-    private String course;       // Course code this subject belongs to
-    private int units;           // Number of academic units
-    private String semester;     // Semester ("1st" or "2nd")
-    private boolean completed;   // Whether the student has completed this subject
+    private String code;         
+    private String description;  
+    private String course;       
+    private int units;           
+    private String semester;     
+    private boolean completed;   
     
-    /**
-     * Constructor for Subject
-     * 
-     * @param code Subject code
-     * @param description Subject description/name
-     * @param course Course code
-     * @param units Number of academic units
-     * @param semester Semester ("1st" or "2nd")
-     * @param completed Whether the subject is completed
-     */
     public Subject(String code, String description, String course, int units, String semester, boolean completed) {
         this.code = code;
         this.description = description;
@@ -30,7 +20,7 @@ public class Subject {
         this.completed = completed;
     }
     
-    // Getters and setters
+   
     
     public String getCode() {
         return code;

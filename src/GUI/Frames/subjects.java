@@ -31,16 +31,16 @@ public class subjects extends javax.swing.JPanel {
     private JLabel lblStudentInfo;
     private DefaultListModel<String> allSubjectsModel = new DefaultListModel<>();
 
-    // File to store subject data
-    private static final String SUBJECT_DATA_FILE = "studentSubjects.dat";
+    
+    private static final String SUBJECT_DATA_FILE = "studentSubjects.txt";
 
-    // Reference to the static student list from studentData class
+    
     private static ArrayList<studyante> stu;
 
     public subjects(ArrayList<studyante> students) {
-        // Store the passed list and ensure we're using the latest data
+        
         this.students = students;
-        this.stu = studentData.stu; // Get the latest data from studentData
+        this.stu = studentData.stu;
 
         initComponents();
 
@@ -48,10 +48,10 @@ public class subjects extends javax.swing.JPanel {
         lblStudentInfo.setBounds(10, 10, 300, 25);
         add(lblStudentInfo);
 
-        // Load saved subject data
+        
         loadSubjectData();
 
-        // Add a selection listener for the table since there's no mouse click handler
+        
         subjectTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = subjectTable.getSelectedRow();
@@ -61,7 +61,7 @@ public class subjects extends javax.swing.JPanel {
                     String course = subjectTable.getValueAt(selectedRow, 2).toString();
                     lblStudentInfo.setText("Student: " + studentName + " | Course: " + course);
 
-                    // Get the selected student
+                    
                     studyante selectedStudent = null;
                     for (studyante s : students) {
                         if (String.valueOf(s.getStuID()).equals(studentId)) {
@@ -71,10 +71,10 @@ public class subjects extends javax.swing.JPanel {
                     }
 
                     if (selectedStudent != null) {
-                        // Get or create subject list for this student
+                        
                         DefaultListModel<String> model = studentSubjects.get(studentName);
 
-                        // If this is the first time selecting this student, load default subjects
+                        
                         if (model == null) {
                             model = new DefaultListModel<>();
                             studentSubjects.put(studentName, model);
@@ -91,7 +91,7 @@ public class subjects extends javax.swing.JPanel {
 
                             System.out.println("Loaded " + model.size() + " default subjects for " + studentName);
 
-                            // Save the updated subject data
+                            
                             saveSubjectData();
                         }
                     }
@@ -103,10 +103,10 @@ public class subjects extends javax.swing.JPanel {
         loadStudents();
     }
 
-    // Constructor overload to include statsPanel
+    
     public subjects(ArrayList<studyante> students, statistics statsPanel) {
         this.students = students;
-        this.stu = studentData.stu; // Get the latest data from studentData
+        this.stu = studentData.stu; 
 
         initComponents();
 
@@ -114,10 +114,10 @@ public class subjects extends javax.swing.JPanel {
         lblStudentInfo.setBounds(10, 10, 300, 25);
         add(lblStudentInfo);
 
-        // Load saved subject data
+        
         loadSubjectData();
 
-        // Add a selection listener for the table since there's no mouse click handler
+        
         subjectTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = subjectTable.getSelectedRow();
@@ -139,24 +139,22 @@ public class subjects extends javax.swing.JPanel {
                     }
 
                     if (selectedStudent != null) {
-                        // First check if student already has assigned subjects
+                        
                         DefaultListModel<String> studentModel = studentSubjects.get(studentName);
 
                         if (studentModel == null || studentModel.isEmpty()) {
-                            // If no assigned subjects, create a new model and get available subjects
+                            
                             studentModel = new DefaultListModel<>();
                             studentSubjects.put(studentName, studentModel);
 
-                            // Get subjects for this student's course and year level
                             List<Subject> availableSubjects = DefaultSubjects.getDefaultSubjects(
                                     selectedStudent.getCourse(), selectedStudent.getYearLvl());
 
-                            // Add available subjects to the list for display
                             for (Subject subject : availableSubjects) {
                                 studentModel.addElement(subject.getCode() + " - " + subject.getDescription());
                             }
 
-                            // Save the updated subject data
+                            
                             saveSubjectData();
                         }
                     }
@@ -169,9 +167,9 @@ public class subjects extends javax.swing.JPanel {
         loadStudents();
     }
 
-    // Method to save the student subjects to a file
+    
     private void saveSubjectData() {
-        String SUBJECT_DATA_FILE = "studentSubjects.dat";
+        String SUBJECT_DATA_FILE = "studentSubjects.txt";
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SUBJECT_DATA_FILE))) {
             // Convert DefaultListModel to serializable ArrayList
             HashMap<String, ArrayList<String>> serializableMap = new HashMap<>();
@@ -195,10 +193,9 @@ public class subjects extends javax.swing.JPanel {
         }
     }
 
-    // Method to load the student subjects from a file
-        @SuppressWarnings("unchecked")
+    
     private void loadSubjectData() {
-        String SUBJECT_DATA_FILE = "studentSubjects.dat";
+        String SUBJECT_DATA_FILE = "studentSubjects.txt";
         File file = new File(SUBJECT_DATA_FILE);
         if (!file.exists()) {
             System.out.println("No saved subject data found.");
@@ -260,13 +257,14 @@ public class subjects extends javax.swing.JPanel {
             model.addRow(new Object[]{
                 s.getStuID(),
                 s.getLastName() + ", " + s.getFirstName(),
-                s.getCourse()
+                s.getCourse(),
+                s.getYearLvl() 
             });
-            System.out.println("Added student: " + s.getStuID() + " | " + s.getFullName() + " | " + s.getCourse());
+            System.out.println("Added student: " + s.getStuID() + " | " + s.getFullName() + " | " + s.getCourse() + " | Year " + s.getYearLvl());
         }
     }
 
-    // Helper method to check if an item already exists in the model
+   
     private boolean containsItem(DefaultListModel<String> model, String item) {
         for (int i = 0; i < model.getSize(); i++) {
             if (model.getElementAt(i).equals(item)) {
@@ -288,7 +286,6 @@ public class subjects extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         subDelete = new GUI.CustomComponents.MyButton();
         subAdd = new GUI.CustomComponents.MyButton();
-        txtSubSearch = new GUI.CustomComponents.MyTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         subjectTable = new GUI.CustomComponents.MyTable();
         btnDisplay = new GUI.CustomComponents.MyButton();
@@ -325,24 +322,25 @@ public class subjects extends javax.swing.JPanel {
             }
         });
 
-        txtSubSearch.setForeground(new java.awt.Color(0, 0, 0));
-        txtSubSearch.setText("Search student data");
-        txtSubSearch.setCustomIcon1(new javax.swing.ImageIcon(getClass().getResource("/Icon/Github-Octicons-Search-16.24.png"))); // NOI18N
-
         subjectTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Student ID", "Name", "Course"
+                "Student ID", "Name", "Course", "Year"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, true
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        subjectTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                subjectTableMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(subjectTable);
@@ -369,31 +367,27 @@ public class subjects extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 25, Short.MAX_VALUE)
                 .addComponent(subAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(subDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(btnDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(23, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(txtSubSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(txtSubSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1)
+                .addGap(62, 62, 62)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(subDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addGap(69, 69, 69))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -413,7 +407,7 @@ public class subjects extends javax.swing.JPanel {
         if (selectedRow != -1) {
             String studentName = subjectTable.getValueAt(selectedRow, 1).toString();
 
-            // Check if student has any subjects assigned
+            
             DefaultListModel<String> model = studentSubjects.get(studentName);
             if (model == null || model.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
@@ -517,23 +511,23 @@ public class subjects extends javax.swing.JPanel {
                         "Could not find data for student: " + studentName,
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
-                continue; // Skip this student and move to next
+                continue; 
             }
 
-            // Get student's existing subjects - make this final or effectively final
+            
             final DefaultListModel<String> studentModel = studentSubjects.computeIfAbsent(studentName, k -> new DefaultListModel<>());
 
-            // Create a model of available subjects for this course/year
+           
             DefaultListModel<String> availableSubjectsModel = new DefaultListModel<>();
 
-            // Store the student reference in a final variable for lambda use
+            
             final studyante finalSelectedStudent = selectedStudent;
 
             // Get all possible subjects for this course/year
             List<Subject> allPossibleSubjects = DefaultSubjects.getDefaultSubjects(
                     finalSelectedStudent.getCourse(), finalSelectedStudent.getYearLvl());
 
-            // Convert to set of codes for easy checking
+         
             Set<String> enrolledSubjectCodes = new HashSet<>();
             for (int i = 0; i < studentModel.size(); i++) {
                 String subjectEntry = studentModel.getElementAt(i);
@@ -541,7 +535,7 @@ public class subjects extends javax.swing.JPanel {
                 enrolledSubjectCodes.add(code);
             }
 
-            // Add subjects that aren't already enrolled in
+            
             for (Subject subject : allPossibleSubjects) {
                 if (!enrolledSubjectCodes.contains(subject.getCode())) {
                     availableSubjectsModel.addElement(subject.getCode() + " - " + subject.getDescription());
@@ -565,7 +559,8 @@ public class subjects extends javax.swing.JPanel {
             JPanel panel = new JPanel(new BorderLayout());
 
             JList<String> subjectList = new JList<>(availableSubjectsModel);
-            // Enable multiple selection in the subject list
+            
+            
             subjectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             JScrollPane scrollPane = new JScrollPane(subjectList);
             panel.add(scrollPane, BorderLayout.CENTER);
@@ -658,6 +653,10 @@ public class subjects extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnDisplayActionPerformed
 
+    private void subjectTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_subjectTableMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_subjectTableMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private GUI.CustomComponents.MyButton btnDisplay;
@@ -666,6 +665,5 @@ public class subjects extends javax.swing.JPanel {
     private GUI.CustomComponents.MyButton subAdd;
     private GUI.CustomComponents.MyButton subDelete;
     private GUI.CustomComponents.MyTable subjectTable;
-    private GUI.CustomComponents.MyTextField txtSubSearch;
     // End of variables declaration//GEN-END:variables
 }

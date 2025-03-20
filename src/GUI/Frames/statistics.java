@@ -16,54 +16,53 @@ import java.util.ArrayList;
  * @author Asus
  */
 public class statistics extends javax.swing.JPanel {
-private List<studyante> students;
-     
+
+    private List<studyante> students;
 
     public statistics(List<studyante> students) {
         this.students = (students != null) ? students : new ArrayList<>();
         initComponents();
-        initializeComponents();
+//        initializeComponents();
         updateAllCharts();
     }
 
-    private void initializeComponents() {
-        if (stuOverall == null) {
-            System.out.println("❌ stuOverall is NULL! Initializing manually...");
-            stuOverall = new DraggableTotalStudentsPanel();
-            add(stuOverall);
-        }
-
-        if (stuMale == null) {
-            System.out.println("❌ stuMale is NULL! Initializing manually...");
-            stuMale = new TotalMaleStudentsPanel();
-            add(stuMale);
-        }
-
-        if (stuFemale == null) {
-            System.out.println("❌ stuFemale is NULL! Initializing manually...");
-            stuFemale = new TotalFemaleStudentsPanel();
-            add(stuFemale);
-        }
-
-        if (pnlBar == null) {
-            System.out.println("❌ pnlBar is NULL! Initializing manually...");
-            pnlBar = new BarGraphPanel();
-            add(pnlBar);
-        }
-
-        if (stuPie == null) {
-            System.out.println("❌ stuPie is NULL! Initializing manually...");
-            stuPie = new PieChartPanel();
-            add(stuPie);
-        }
-    }
-
+//    private void initializeComponents() {
+//        if (stuOverall == null) {
+//            System.out.println("stuOverall is NULL! Initializing manually...");
+//            stuOverall = new DraggableTotalStudentsPanel();
+//            add(stuOverall);
+//        }
+//
+//        if (stuMale == null) {
+//            System.out.println("stuMale is NULL! Initializing manually...");
+//            stuMale = new TotalMaleStudentsPanel();
+//            add(stuMale);
+//        }
+//
+//        if (stuFemale == null) {
+//            System.out.println("stuFemale is NULL! Initializing manually...");
+//            stuFemale = new TotalFemaleStudentsPanel();
+//            add(stuFemale);
+//        }
+//
+//        if (pnlBar == null) {
+//            System.out.println("pnlBar is NULL! Initializing manually...");
+//            pnlBar = new BarGraphPanel();
+//            add(pnlBar);
+//        }
+//
+//        if (stuPie == null) {
+//            System.out.println("stuPie is NULL! Initializing manually...");
+//            stuPie = new PieChartPanel();
+//            add(stuPie);
+//        }
+//    }
     private void updateAllCharts() {
         updateStudentCount();
         updateBarGraph();
         updatePieChart();
     }
-    
+
 // total student, male, famale
     private void updateStudentCount() {
         int maleCount = 0;
@@ -77,47 +76,57 @@ private List<studyante> students;
             }
         }
 
-        if (stuMale != null) stuMale.setTotalStudents(maleCount);
-        if (stuFemale != null) stuFemale.setTotalStudents(femaleCount);
-        if (stuOverall != null) stuOverall.setTotalStudents(students.size());  // calculate the student total
+        if (stuMale != null) {
+            stuMale.setTotalStudents(maleCount);
+        }
+        if (stuFemale != null) {
+            stuFemale.setTotalStudents(femaleCount);
+        }
+        if (stuOverall != null) {
+            stuOverall.setTotalStudents(students.size());
+        }
 
-        System.out.println("✅ Updated student counts - Male: " + maleCount + ", Female: " + femaleCount);
+        System.out.println("Updated student counts - Male: " + maleCount + ", Female: " + femaleCount);
     }
 // bar graph
-    private void updateBarGraph() {
-        if (pnlBar == null) {
-            System.out.println("❌ pnlBar is NULL! Cannot update bar graph.");
-            return;
-        }
 
-        if (students.isEmpty()) {
-            System.out.println("⚠ Students list is empty! No data to count.");
-            return;
-        }
+    private void updateBarGraph() {
+//        if (pnlBar == null) {
+//            System.out.println("pnlBar is NULL! Cannot update bar graph.");
+//            return;
+//        }
+//
+//        if (students.isEmpty()) {
+//            System.out.println("Students list is empty! No data to count.");
+//            return;
+//        }
 
         Map<String, Integer> courseCount = new HashMap<>();
 //  calculate the bargraph course
         for (studyante s : students) {
-            if (!"Enter student Lastname".equals(s.getCourse())) {
+            if (s.getCourse() != null && !s.getCourse().isEmpty()
+                    && !"Please select a Course".equals(s.getCourse())) {
                 courseCount.put(s.getCourse(), courseCount.getOrDefault(s.getCourse(), 0) + 1);
             }
-        }
+        } 
 
         if (courseCount.isEmpty()) {
-            System.out.println("⚠ No data to display in bar graph!");
+            System.out.println("No data to display in bar graph!");
         } else {
             pnlBar.setGraphData(courseCount);
         }
     }
 // pie chart
+
     private void updatePieChart() {
         if (stuPie == null) {
-            System.out.println("❌ stuPie is NULL! Cannot update pie chart.");
+            System.out.println("stuPie is NULL! Cannot update pie chart.");
             return;
         }
 
+        // calculates student pie chart
         int enrolled = 0, dropped = 0, unenrolled = 0;
-// calculates student pie chart
+
         for (studyante s : students) {
             if ("Enrolled".equalsIgnoreCase(s.getStatus())) {
                 enrolled++;
@@ -133,16 +142,15 @@ private List<studyante> students;
 
     public void refreshData(List<studyante> updatedStudents) {
         if (updatedStudents == null || updatedStudents.isEmpty()) {
-            System.out.println("❌ Cannot refresh data: updatedStudents is null or empty! Keeping old data.");
+            System.out.println("Cannot refresh data: updatedStudents is null or empty! Keeping old data.");
             return;
         }
 
         this.students = updatedStudents;
-        System.out.println("🔄 Refreshing data... New size: " + students.size());
+        System.out.println("Refreshing data... New size: " + students.size());
 
         updateAllCharts();
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
